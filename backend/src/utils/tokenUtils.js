@@ -1,0 +1,22 @@
+const jwt = require('jsonwebtoken');
+
+const generateAccessToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role, email: user.email },
+    process.env.JWT_SECRET || process.env.JWT_ACCESS_SECRET || 'fallback_access_secret',
+    { expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m' }
+  );
+};
+
+const generateRefreshToken = (user) => {
+  return jwt.sign(
+    { id: user._id },
+    process.env.JWT_REFRESH_SECRET || 'fallback_refresh_secret',
+    { expiresIn: process.env.JWT_REFRESH_EXPIRY || '7d' }
+  );
+};
+
+module.exports = {
+  generateAccessToken,
+  generateRefreshToken
+};
